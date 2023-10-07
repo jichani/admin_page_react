@@ -1,5 +1,17 @@
+import { Paper, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { styled } from '@mui/system';
 import './App.css';
 import Customer from './components/Customer';
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  width: '100%',
+  marginTop: theme.spacing(3),
+  overflowX: "auto",
+}));
+
+const StyledTable = styled(Table)({
+  minWidth: 1080,
+});
 
 const customers = [{
   'id': 1,
@@ -29,23 +41,23 @@ const customers = [{
 
 function App() {
   return (
-    <div>
-      {
-        customers.map(customer => {
-          return (
-            <Customer
-              key={customer.id}
-              id={customer.id}
-              image={customer.image}
-              name={customer.name}
-              birthday={customer.birthday}
-              gender={customer.gender}
-              jop={customer.jop}
-            />
-          )
-        })
-      }
-    </div>
+    <StyledPaper>
+      <StyledTable>
+        <TableHead>
+          <TableRow>
+            <TableCell>번호</TableCell>
+            <TableCell>이미지</TableCell>
+            <TableCell>이름</TableCell>
+            <TableCell>생년월일</TableCell>
+            <TableCell>성별</TableCell>
+            <TableCell>직업</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {customers.map(customer => { return (<Customer key={customer.id} id={customer.id} image={customer.image} name={customer.name} birthday={customer.birthday} gender={customer.gender} jop={customer.jop} />) })}
+        </TableBody>
+      </StyledTable>
+    </StyledPaper>
   );
 }
 
