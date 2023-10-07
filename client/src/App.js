@@ -4,6 +4,7 @@ import './App.css';
 import Customer from './components/Customer';
 import { Component } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
+import CustomerAdd from './components/CustomerAdd';
 
 // MUI 컴포넌트에 스타일을 사용하는 방식
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -47,29 +48,32 @@ class App extends Component {
 
   render() {
     return (
-      <StyledPaper>
-        <StyledTable>
-          <TableHead>
-            <TableRow>
-              <TableCell>번호</TableCell>
-              <TableCell>이미지</TableCell>
-              <TableCell>이름</TableCell>
-              <TableCell>생년월일</TableCell>
-              <TableCell>성별</TableCell>
-              <TableCell>직업</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {this.state.customers ? this.state.customers.map(customer => { return (<Customer key={customer.id} id={customer.id} image={customer.image} name={customer.name} birthday={customer.birthday} gender={customer.gender} jop={customer.job} />) }) :
+      <div>
+        <StyledPaper>
+          <StyledTable>
+            <TableHead>
               <TableRow>
-                <TableCell colSpan={6} align='center'>
-                  <StyledProgress variant='determinate' value={this.state.completed} />
-                </TableCell>
+                <TableCell>번호</TableCell>
+                <TableCell>이미지</TableCell>
+                <TableCell>이름</TableCell>
+                <TableCell>생년월일</TableCell>
+                <TableCell>성별</TableCell>
+                <TableCell>직업</TableCell>
               </TableRow>
-            }
-          </TableBody>
-        </StyledTable>
-      </StyledPaper>
+            </TableHead>
+            <TableBody>
+              {this.state.customers ? this.state.customers.map(customer => { return (<Customer key={customer.id} id={customer.id} image={customer.image} name={customer.name} birthday={customer.birthday} gender={customer.gender} jop={customer.job} />) }) :
+                <TableRow>
+                  <TableCell colSpan={6} align='center'>
+                    <StyledProgress variant='determinate' value={this.state.completed} />
+                  </TableCell>
+                </TableRow>
+              }
+            </TableBody>
+          </StyledTable>
+        </StyledPaper>
+        <CustomerAdd />
+      </div>
     );
   }
 }
