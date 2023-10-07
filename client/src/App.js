@@ -3,6 +3,7 @@ import { styled } from '@mui/system';
 import './App.css';
 import Customer from './components/Customer';
 import { Component } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 
 // MUI 컴포넌트에 스타일을 사용하는 방식
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -10,26 +11,38 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(3),
   overflowX: "auto",
 }));
+
 const StyledTable = styled(Table)({
   minWidth: 1080,
 });
 
+const StyledProgress = styled(CircularProgress)(({ theme }) => ({
+  marginTop: theme.spacing(2),
+}));
+
 class App extends Component {
 
   state = {
-    customers: ""
+    customers: "",
+    completed: 0,
   }
 
   componentDidMount() {
-    this.callApi()
-      .then(res => this.setState({ customers: res }))
-      .catch(err => console.log(err));
+    this.timer = setInterval(this.progress, 20);
+    // this.callApi()
+    //   .then(res => this.setState({ customers: res }))
+    //   .catch(err => console.log(err));
   }
 
   callApi = async () => {
     const response = await fetch('/api/customers');
     const body = await response.json();
     return body;
+  }
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   }
 
   render() {
@@ -47,7 +60,13 @@ class App extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.state.customers ? this.state.customers.map(customer => { return (<Customer key={customer.id} id={customer.id} image={customer.image} name={customer.name} birthday={customer.birthday} gender={customer.gender} jop={customer.jop} />) }) : ""}
+            {this.state.customers ? this.state.customers.map(customer => { return (<Customer key={customer.id} id={customer.id} image={customer.image} name={customer.name} birthday={customer.birthday} gender={customer.gender} jop={customer.jop} />) }) :
+              <TableRow>
+                <TableCell colSpan={6} align='center'>
+                  <StyledProgress variant='determinate' value={this.state.completed} />
+                </TableCell>
+              </TableRow>
+            }
           </TableBody>
         </StyledTable>
       </StyledPaper>
