@@ -3,6 +3,7 @@ import { styled } from '@mui/system';
 import './App.css';
 import Customer from './components/Customer';
 
+// MUI 컴포넌트에 스타일을 사용하는 방식
 const StyledPaper = styled(Paper)(({ theme }) => ({
   width: '100%',
   marginTop: theme.spacing(3),
