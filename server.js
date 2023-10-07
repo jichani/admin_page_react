@@ -20,6 +20,10 @@ const connection = mysql.createConnection({
 })
 connection.connect();
 
+// 파일을 가져오기 위해서는 multer가 필요
+const multer = require('multer');
+const upload = multer({ dest: './upload' });
+
 app.get('/api/customers', (req, res) => {
   connection.query(
     "SELECT * FROM CUSTOMER",
@@ -28,5 +32,23 @@ app.get('/api/customers', (req, res) => {
     }
   );
 });
+
+app.use('/image', express.static('./upload'));
+
+app.post('/api/customers', upload.single('image'), (req, res) => {
+  let sql = 'INSERT INTO CUSTOMER VALUES (null, ?, ?, ?, ?, ?)';
+  let image = 'http://localhost:5000/image/' + req.file.filename;
+  let name = req.body.name;
+  let birthday = req.body.birthday;
+  let gender = req.body.gender;
+  let job = req.body.job;
+  let params = [image, name, birthday, gender, job];
+  console.log(image);
+  connection.query(sql, params,
+    (err, rows, fields) => {
+      res.send(rows);
+      console.log(err);
+    })
+})
 
 app.listen(port, () => console.log(`Listening on port ${port} :)`));
