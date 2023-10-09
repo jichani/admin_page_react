@@ -78,14 +78,16 @@ class App extends Component {
     super(props);
     this.state = {
       customers: '',
-      completed: 0
+      completed: 0,
+      searchKeyword: ''
     }
   };
 
   stateRefresh = () => {
     this.setState({
       customer: '',
-      completed: 0
+      completed: 0,
+      searchKeyword: ''
     });
     this.callApi()
       .then(res => this.setState({ customers: res }))
@@ -110,7 +112,21 @@ class App extends Component {
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   }
 
+  handleValueChange = (e) => {
+    let nextState = {};
+    nextState[e.target.name] = e.target.value;
+    this.setState(nextState);
+  }
+
   render() {
+    const filteredComponents = (data) => {
+      data = data.filter((c) => {
+        return c.name.indexOf(this.state.searchKeyword) > -1;
+      });
+      return data.map((c) => {
+        return <Customer stateRefresh={this.stateRefresh} key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />
+      })
+    }
     const cellList = ["설정", "프로필 이미지", "이름", "생년월일", "성별", "직업", "설정"];
     return (
       <Box sx={{
@@ -143,6 +159,9 @@ class App extends Component {
               <StyledInputBase
                 placeholder="검색하기"
                 inputProps={{ 'aria-label': 'search' }}
+                name='searchKeyword'
+                value={this.state.searchKeyword}
+                onChange={this.handleValueChange}
               />
             </Search>
           </Toolbar>
@@ -165,7 +184,8 @@ class App extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.customers ? this.state.customers.map(customer => { return (<Customer stateRefresh={this.stateRefresh} key={customer.id} id={customer.id} image={customer.image} name={customer.name} birthday={customer.birthday} gender={customer.gender} jop={customer.job} />) }) :
+              {this.state.customers ?
+                filteredComponents(this.state.customers) :
                 <TableRow>
                   <TableCell colSpan={6} align='center'>
                     <StyledProgress variant='determinate' value={this.state.completed} />
