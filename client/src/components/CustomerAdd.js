@@ -94,7 +94,6 @@ class CustomerAdd extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
     return (
       <div>
         <Button variant="contained" color="primary" onClick={this.handleClickOpen}>
