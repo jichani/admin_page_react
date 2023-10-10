@@ -1,4 +1,4 @@
-const fs = require('fs');
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
@@ -7,16 +7,15 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const data = fs.readFileSync('./database.json');
-const conf = JSON.parse(data);
 const mysql = require('mysql');
 
+// .env 파일에 있는 환경변수들을 사용합니다.
 const connection = mysql.createConnection({
-  host: conf.host,
-  user: conf.user,
-  password: conf.password,
-  port: conf.port,
-  database: conf.database
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT, // PORT가 이미 위에서 사용되었으므로 DB_PORT 등으로 변경해주세요.
+  database: process.env.DB_DATABASE
 })
 connection.connect();
 
